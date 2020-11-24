@@ -3,12 +3,14 @@ import Layout from './lander-layout'
 import { Heading, Box, Text, Link } from 'theme-ui'
 import ExploreKnowledgeBase from './exploreKnowledgeBase'
 import Press from './press'
+import strings from '../../strings/strings'
+import JsxParser from 'react-jsx-parser'
 
 const Index = () => {
   return (
     <Layout>
       <Heading as="h1" sx={{ my: [4, null, 5], fontSize: [6, null, 7] }}>
-        Input Crowd, Output Meaning
+        {strings('home_title')}
       </Heading>
       <Heading
         as="h3"
@@ -17,38 +19,30 @@ const Index = () => {
           lineHeight: 'body',
           mb: [4, null, 5]
         }}>
-        Polis is a real-time system for gathering, analyzing and understanding
-        what large groups of people think in their own words, enabled by
-        advanced statistics and machine learning.
+        {strings('home_subtitle')}
       </Heading>
       <Box sx={{ mb: [4, null, 5] }}>
         <Text>
-          Polis has been used all over the world by governments, academics,
-          independent media and citizens, and is completely open source.
+          {strings('home_content')}
         </Text>
       </Box>
       <Heading
         as="h3"
         sx={{ fontSize: [4], lineHeight: 'body', mb: [2, null, 3] }}>
-        Get Started
+        {strings('home_getstart')}
       </Heading>
       <Box sx={{ mb: [4, null, 5] }}>
-        <Link href="/createuser">Sign up</Link>
-        {' or '}
-        <Link href="/signin">Sign in</Link>
+        <JsxParser components={{ Link }} jsx={strings('home_getstart_content')}/>
       </Box>
       <Press />
       <ExploreKnowledgeBase />
       <Heading
         as="h3"
         sx={{ fontSize: [4], lineHeight: 'body', my: [2, null, 3] }}>
-        Contribute
+        {strings('home_contribute')}
       </Heading>
       <Box sx={{ mb: [4, null, 5] }}>
-        Explore the code and join the community{' '}
-        <Link target="_blank" href="https://github.com/pol-is/">
-          on Github
-        </Link>
+        <JsxParser components={{ Link }} jsx={strings('home_contribute_content')}/>
       </Box>
     </Layout>
   )

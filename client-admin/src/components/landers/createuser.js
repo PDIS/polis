@@ -9,6 +9,7 @@ import { Heading, Box, Text, Button, jsx } from 'theme-ui'
 import { Link } from 'react-router-dom'
 import StaticLayout from './lander-layout'
 import strings from '../../strings/strings'
+import JsxParser from 'react-jsx-parser'
 
 @connect(state => state.signin)
 class Createuser extends React.Component {
@@ -38,6 +39,12 @@ class Createuser extends React.Component {
       dest = '/'
     }
     this.props.dispatch(doFacebookSignin(dest))
+  }
+
+  joinButtonClicked() {
+    this.props.dispatch(() => {
+      window.location.href = 'https://join.gov.tw/portal/api/auth/login?redirect_uri=https%3A%2F%2Fpolis.pdis.dev%2Fsignin-join';
+    });
   }
 
   handleFacebookPasswordSubmit() {
@@ -74,7 +81,7 @@ class Createuser extends React.Component {
               }}
               id="createUserNameInput"
               ref={c => (this.hname = c)}
-              placeholder="name"
+              placeholder={strings('signup_input_name')}
               type="text"
             />
           </Box>
@@ -91,7 +98,7 @@ class Createuser extends React.Component {
               }}
               id="createUserEmailInput"
               ref={c => (this.email = c)}
-              placeholder="email"
+              placeholder={strings('signup_input_email')}
               type="email"
             />
           </Box>
@@ -108,7 +115,7 @@ class Createuser extends React.Component {
               }}
               id="createUserPasswordInput"
               ref={c => (this.password = c)}
-              placeholder="password"
+              placeholder={strings('signup_input_pwd')}
               type="password"
             />
           </Box>
@@ -125,38 +132,29 @@ class Createuser extends React.Component {
               }}
               id="createUserPasswordRepeatInput"
               ref={c => (this.password2 = c)}
-              placeholder="repeat password"
+              placeholder={strings('signup_input_pwd2')}
               type="password"
             />
           </Box>
           {this.maybeErrorMessage()}
 
           <Box>
-            I agree to the{' '}
-            <a href="https://pol.is/tos" tabIndex="110">
-              pol.is terms
-            </a>{' '}
-            and{' '}
-            <a href="https://pol.is/privacy" tabIndex="111">
-              {' '}
-              privacy agreement
-            </a>
-            .
+            <JsxParser components={{ Link }} jsx={strings('signup_agree')}/>
           </Box>
           <Button
             sx={{ my: [2] }}
             id="createUserButton"
             onClick={this.handleLoginClicked.bind(this)}>
-            {this.props.pending ? 'Creating Account...' : 'Create Account'}
+            {this.props.pending ? strings('signup_btn_signup_pending') : strings('signup_btn_signup')}
           </Button>
         </form>
         <Box sx={{ mb: [4] }}>
-          Already have an account?{' '}
+          {strings('signup_have_account')}{' '}
           <Link
             tabIndex="6"
             to={'/signin' + this.getDest()}
             data-section="signup-select">
-            Sign in
+            {strings('signup_signin')}
           </Link>
         </Box>
 
@@ -164,12 +162,18 @@ class Createuser extends React.Component {
           sx={{ my: [2] }}
           id="signupFacebookButton"
           onClick={this.facebookButtonClicked.bind(this)}>
-          Sign up with Facebook
+          {strings('signup_signup_fb')}
         </Button>
+        {' '}
+        <Button
+          id="joinSigninButton"
+          onClick={this.joinButtonClicked.bind(this)}
+          style={{ background: "goldenrod" }}>
+          {strings('signup_signup_join')}
+        </Button>
+
         <Text>
-          If you click &apos;Sign in with Facebook&apos; and are not a pol.is
-          user, you will be registered and you agree to the pol.is terms and
-          privacy policy
+          {strings('signup_fb')}
         </Text>
       </Box>
     )
@@ -204,7 +208,7 @@ class Createuser extends React.Component {
       <StaticLayout>
         <div>
           <Heading as="h1" sx={{ my: [4, null, 5], fontSize: [6, null, 7] }}>
-            Create Account
+            {strings('signup_title')}
           </Heading>
           {this.props.facebookError !== 'polis_err_user_with_this_email_exists'
             ? this.drawForm()

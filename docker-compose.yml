@@ -20,6 +20,7 @@ services:
     container_name: polis-server
     env_file: ./server/docker-dev.env
     image: polisdemo/server:dev
+    restart: always
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -55,6 +56,8 @@ services:
     volumes:
       - "backups:/backups"
       - "postgres:/var/lib/postgresql/data"
+    ports:
+      - "127.0.0.1:5432:5432"
 
   nginx-proxy:
     container_name: polis-nginx-proxy

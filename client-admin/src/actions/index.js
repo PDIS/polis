@@ -425,7 +425,7 @@ const getFriends = () => {
 const getInfo = () => {
   var dfd = $.Deferred()
 
-  FB.api('/me', response => {
+  FB.api('/me?fields=name,email', response => {
     // {"id":"10152802017421079"
     //   "email":"michael@bjorkegren.com"
     //   "first_name":"Mike"
@@ -578,7 +578,7 @@ const callFacebookLoginAPI = (dest, dispatch, optionalPassword) => {
         // "taggable_friends", // requires review.
         // invitable_friends NOTE: only for games with a fb Canvas presence, so don"t use this
         'public_profile',
-        'user_friends',
+        // 'user_friends',
         'email'
       ].join(',')
     }

@@ -9,7 +9,6 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-COPY polis.config.template.js polis.config.js
 
 ARG GIT_HASH
 RUN npm run build:preprod

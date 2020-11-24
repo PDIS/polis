@@ -27,9 +27,9 @@ class SignIn extends React.Component {
     console.log(error, errorInfo)
   }
 
-  // getDest() {
-  //   return this.props.location.pathname.slice("/signin".length);
-  // }
+  getDest() {
+    return this.props.location.pathname.slice("/signin".length);
+  }
 
   handleLoginClicked(e) {
     e.preventDefault()
@@ -51,6 +51,13 @@ class SignIn extends React.Component {
       dest = '/'
     }
     this.props.dispatch(doFacebookSignin(dest))
+  }
+
+  joinButtonClicked() {
+    this.props.dispatch(() => {
+      var domain = window.location.hostname;
+      window.location.href = 'https://join.gov.tw/portal/api/auth/login?redirect_uri=https%3A%2F%2F' + domain + '%2Fsignin-join';
+    });
   }
 
   handleFacebookPasswordSubmit() {
@@ -87,7 +94,7 @@ class SignIn extends React.Component {
               }}
               id="signinEmailInput"
               ref={c => (this.email = c)}
-              placeholder="email"
+              placeholder={strings('signin_input_email')}
               type="email"
             />
           </Box>
@@ -104,7 +111,7 @@ class SignIn extends React.Component {
               }}
               id="signinPasswordInput"
               ref={c => (this.password = c)}
-              placeholder="password"
+              placeholder={strings('signin_input_pwd')}
               type="password"
             />
           </Box>
@@ -113,23 +120,29 @@ class SignIn extends React.Component {
             sx={{ my: [2] }}
             id="signinButton"
             onClick={this.handleLoginClicked.bind(this)}>
-            {this.props.pending ? 'Signing in...' : 'Sign In'}
+            {this.props.pending ? strings('signin_btn_signin_pending') : strings('signin_btn_signin')}
           </Button>
           <Text sx={{ my: 4 }}>
-            {'Forgot your password? '}
-            <Link to={'/pwresetinit'}>Reset Password</Link>
+            {strings('signin_text_forgot_pwd')}{' '}
+            <Link to={'/pwresetinit'}>{strings('signin_text_reset_pwd')}</Link>
           </Text>
         </form>
         <Box sx={{ my: 4 }}>
           <Button
             id="facebookSigninButton"
             onClick={this.facebookButtonClicked.bind(this)}>
-            Sign in with Facebook
+            {strings('signin_btn_fb')}
+          </Button>
+          {' '}
+          <Button
+            id="joinSigninButton"
+            onClick={this.joinButtonClicked.bind(this)}
+            style={{ background: "goldenrod" }}
+            >
+            {strings('signin_btn_join')}
           </Button>
           <Text sx={{ my: 2 }}>
-            If you click &apos;Sign in with Facebook&apos; and are not a pol.is
-            user, you will be registered and you agree to the pol.is terms and
-            privacy policy
+            {strings('signin_text_fb')}
           </Text>
         </Box>
       </Box>
@@ -171,7 +184,7 @@ class SignIn extends React.Component {
     return (
       <StaticLayout>
         <Heading as="h1" sx={{ my: [4, null, 5], fontSize: [6, null, 7] }}>
-          Sign In
+          {strings('signin_text_title')}
         </Heading>
         {this.props.facebookError !== 'polis_err_user_with_this_email_exists'
           ? this.drawLoginForm()

@@ -4727,6 +4727,7 @@ Email verified! You can close this tab or hit the back button.
     Promise.all([
       emailVerifiedPromise,
     ]).then(function(a) {
+      /* 越過 facebook 登入後驗證
       let isVerifiedByPolisOrFacebook = a[0];
 
       if (!isVerifiedByPolisOrFacebook) {
@@ -4739,6 +4740,7 @@ Email verified! You can close this tab or hit the back button.
           return;
         }
       }
+      */
 
       pgQueryP("select users.*, facebook_users.fb_user_id from users left join facebook_users on users.uid = facebook_users.uid " +
         "where users.email = ($1) " +

@@ -1329,6 +1329,7 @@ helpersInitialized.then(function(o) {
   app.get(/^\/bot(\/.*)?/, fetchIndexForAdminPage);
   app.get(/^\/conversations(\/.*)?/, fetchIndexForAdminPage);
   app.get(/^\/signout(\/.*)?/, fetchIndexForAdminPage);
+  app.get(/^\/signin-join/, require('./src/auth/join').signIn);
   app.get(/^\/signin(\/.*)?/, fetchIndexForAdminPage);
   app.get(/^\/dist\/admin_bundle.js$/, makeFileFetcher(hostname, portForAdminFiles, "/dist/admin_bundle.js", {
     'Content-Type': "application/javascript",

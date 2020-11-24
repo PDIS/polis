@@ -7,6 +7,7 @@ import StaticLayout from './lander-layout'
 import { Heading } from 'theme-ui'
 
 import { doSignout } from '../../actions'
+import strings from '../../strings/strings'
 
 @connect(state => state.signout)
 class SignOut extends React.Component {
@@ -18,7 +19,7 @@ class SignOut extends React.Component {
     return (
       <StaticLayout>
         <Heading as="h1" sx={{ my: [4, null, 5], fontSize: [6, null, 7] }}>
-          Signing Out
+          {strings('signout_pending')}
         </Heading>
       </StaticLayout>
     )

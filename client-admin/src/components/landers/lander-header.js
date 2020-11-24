@@ -4,6 +4,7 @@ import { Flex, Box, jsx } from 'theme-ui'
 
 import { Link } from 'react-router-dom'
 import Logomark from '../framework/logomark'
+import strings from '../../strings/strings'
 
 class Header extends Component {
   render() {
@@ -28,7 +29,7 @@ class Header extends Component {
           </Box>
           <Box>
             <Link sx={{ variant: 'links.nav' }} to="/signin">
-              Sign in
+              {strings('signin_text_title')}
             </Link>
           </Box>
         </Flex>

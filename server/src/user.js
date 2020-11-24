@@ -98,15 +98,18 @@ function getUser(uid, zid_optional, xid_optional, owner_uid_optional) {
     getFacebookInfo([uid]),
     getTwitterInfo([uid]),
     xidInfoPromise,
+    getJoinInfo([uid]),
   ]).then(function(o) {
     let info = o[0];
     let fbInfo = o[1];
     let twInfo = o[2];
     let xInfo = o[3];
+    let joinInfo = o[4];
 
     let hasFacebook = fbInfo && fbInfo.length && fbInfo[0];
     let hasTwitter = twInfo && twInfo.length && twInfo[0];
     let hasXid = xInfo && xInfo.length && xInfo[0];
+    let hasJoin = joinInfo && joinInfo.length && joinInfo[0] && joinInfo[0].valid;
     if (hasFacebook) {
       let width = 40;
       let height = 40;
@@ -121,6 +124,9 @@ function getUser(uid, zid_optional, xid_optional, owner_uid_optional) {
       delete xInfo[0].created;
       delete xInfo[0].uid;
     }
+    if (hasJoin) {
+      delete joinInfo[0].uid;
+    }
     return {
       uid: uid,
       email: info.email,
@@ -128,8 +134,10 @@ function getUser(uid, zid_optional, xid_optional, owner_uid_optional) {
       hasFacebook: !!hasFacebook,
       facebook: fbInfo && fbInfo[0],
       twitter: twInfo && twInfo[0],
+      join: joinInfo && joinInfo[0],
       hasTwitter: !!hasTwitter,
       hasXid: !!hasXid,
+      hasJoin: !!hasJoin,
       xInfo: xInfo && xInfo[0],
       finishedTutorial: !!info.tut,
       site_ids: [info.site_id],
@@ -147,6 +155,10 @@ function getTwitterInfo(uids) {
 
 function getFacebookInfo(uids) {
   return pg.queryP_readOnly("select * from facebook_users where uid in ($1);", uids);
+}
+
+function getJoinInfo(uids) {
+  return pg.queryP_readOnly("select * from join_users where uid in ($1);", uids);
 }
 
 // so we can grant extra days to users
@@ -260,7 +272,8 @@ function getSocialInfoForUsers(uids, zid) {
     "x as (select * from xids where uid in (" + uidString + ") and owner  in (select org_id from conversations where zid = ($1))), "+
     "fb as (select * from facebook_users where uid in (" + uidString + ")), "+
     "tw as (select * from twitter_users where uid in (" + uidString + ")), "+
-    "foo as (select *, coalesce(fb.uid, tw.uid) as foouid from fb full outer join tw on tw.uid = fb.uid) "+
+    "jn as (select * from join_users where uid in (" + uidString + ")), "+
+    "foo as (select *, coalesce(fb.uid, tw.uid, jn.uid) as foouid from fb full outer join tw on tw.uid = fb.uid full outer join jn on jn.uid = fb.uid) "+
     "select *, coalesce(foo.foouid, x.uid) as uid from foo full outer join x on x.uid = foo.foouid;", [zid]);
 }
 

@@ -1,0 +1,59 @@
+stages:
+    - deploy-dev
+    - run-dev
+    - deploy-prod
+    - run-prod
+
+deploy-dev:
+    stage: deploy-dev
+    tags:
+        - polis-dev
+    script:
+        - rsync -avh --delete ./ ~/polis
+        - rsync -avh $DEV_SERVER_ENV ~/polis/server/docker-dev.env
+        - rsync -avh $DEV_POSTGRES_ENV ~/polis/server/docker-db-dev.env
+        - rsync -avh $DEV_SSL_CERT ~/polis/file-server/nginx/certs/snakeoil.cert.pem
+        - rsync -avh $DEV_SSL_KEY ~/polis/file-server/nginx/certs/snakeoil.key.pem
+        - rsync -avh $DEV_ADMIN_CONFIG ~/polis/client-admin/polis.config.js
+        - rsync -avh $DEV_PARTICIPATION_CONFIG ~/polis/client-participation/polis.config.js
+
+run-dev:
+    stage: run-dev
+    tags:
+        - polis-dev
+    script:
+        - cd ~/polis
+        - docker-compose build
+        - docker-compose down
+        - docker-compose up -d
+
+deploy-prod:
+    stage: deploy-prod
+    tags:
+        - polis-prod
+    only:
+        - main-pdis
+    script:
+        - rsync -avh --delete ./ ~/polis
+        - rsync -avh $PROD_SERVER_ENV ~/polis/server/docker-dev.env
+        - rsync -avh $PROD_POSTGRES_ENV ~/polis/server/docker-db-dev.env
+        - rsync -avh $PROD_SSL_CERT ~/polis/file-server/nginx/certs/snakeoil.cert.pem
+        - rsync -avh $PROD_SSL_KEY ~/polis/file-server/nginx/certs/snakeoil.key.pem
+        - rsync -avh $PROD_ADMIN_CONFIG ~/polis/client-admin/polis.config.js
+        - rsync -avh $PROD_PARTICIPATION_CONFIG ~/polis/client-participation/polis.config.js
+        
+
+
+run-prod:
+    stage: run-prod
+    tags:
+        - polis-prod
+    only:
+        - main-pdis
+    script:
+        - cd ~/polis
+        - docker-compose build
+        - docker-compose down
+        - docker-compose up -d
+    
+
